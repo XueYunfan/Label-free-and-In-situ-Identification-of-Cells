@@ -146,19 +146,17 @@ class InstanceNormalization(Layer):
 
 def residual_conv_block(input_tensor, filters):
 	
-	x = InstanceNormalization()(input_tensor)
-	x = Activation('relu')(x)
+	norm = InstanceNormalization()(input_tensor)
+	x = Activation('relu')(norm)
 	x = Conv2D(filters, 3, activation = None, padding = 'same', 
 		kernel_initializer = initializers.he_normal(seed=1))(x)
 	x = InstanceNormalization()(x)
 	x = Activation('relu')(x)
 	x = Conv2D(filters, 3, activation = None, padding = 'same', 
 		kernel_initializer = initializers.he_normal(seed=1))(x)
-	
-	y = InstanceNormalization()(input_tensor)
-	y = Activation('relu')(y)
+
 	y = Conv2D(filters, 1, padding='same', activation = None, 
-		kernel_initializer = initializers.he_normal(seed=1))(y)
+		kernel_initializer = initializers.he_normal(seed=1))(norm)
 	
 	x = add([x, y])
 	
